@@ -87,7 +87,8 @@ def xlsRecap():
         setupHeaders(worksheet,cell_format)
         fillXlsData(anno, worksheet)
 
-    workbook.close()  
+    workbook.close()
+    print("\nReport excel generato")
 
 def addPayment():
     with open('category.json', encoding='utf-8') as json_file:
@@ -97,14 +98,14 @@ def addPayment():
 
     if len(CATEGORIES) == 0:
         print("\nNon ci sono categorie disponibili, aggiungi una categoria prima di procedere")
-        main()
+        return
     
     value = input("\nInserisci il valore:")
     if (value.isdigit):
         value = float(value)
     else:
         print("Non è un numero")
-        main()
+        return
     current_day = str(datetime.now().day)
     current_month = str(datetime.now().month)
     current_year = str(datetime.now().year)
@@ -130,7 +131,7 @@ def addPayment():
 
     with open("anni/"+current_year+".json", "w", encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=4)
-    main()
+    return
 
 def addCategory():
     value = input("\nScrivi il nome della nuova categoria: ")
@@ -140,10 +141,10 @@ def addCategory():
 
     with open("category.json", "w", encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=4)
-    main()
+    return
 
 def closeProgram():
-    return;
+    return True;
 
 def main():
     os.makedirs("anni", exist_ok=True)
@@ -170,7 +171,9 @@ def main():
 
     funzioni = {"Aggiungi spesa o guadagno": addPayment,"Aggiungi categoria": addCategory,"Vedi spese": xlsRecap,"Esci": closeProgram}
 
-    funzioni[scelta]()
+    if (funzioni[scelta]()):
+        return
+    main()
 
 if __name__ == "__main__":
     main() 
