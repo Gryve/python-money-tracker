@@ -65,7 +65,7 @@ def fillXlsData(anno, worksheet):
             totAnno[category] += data[date][category]
             text += str(data[date][category]) + " in " + category + "\n"
         
-        worksheet.write(day,monthIndex,"'"+text)
+        worksheet.write(day,monthIndex," "+text)
 
     worksheet.write(33,1,"TOTALE ANNUO PER CATEGORIA:")
     XCat = 34;
@@ -114,7 +114,7 @@ def addPayment():
     
     category = inquirer.select(
     message="Scegli la categoria:",
-    choices=CATEGORIES,
+    choices=CATEGORIES
     ).execute()
 
 
@@ -124,9 +124,12 @@ def addPayment():
     if current_day+"-"+current_month in data:
         category_dict = data[current_day+"-"+current_month]
     else:
-        category_dict = {cat: 0 for cat in CATEGORIES}
+        category_dict = {}
 
+    if category not in category_dict:
+        category_dict[category] = 0
     category_dict[category] += value
+    
     data[current_day+"-"+current_month] = category_dict
 
     with open("anni/"+current_year+".json", "w", encoding="utf-8") as json_file:
